@@ -22,6 +22,7 @@ import os
 SUCCESS =  "Success"
 FAILURE = "Failure"
 OPTIONS = ['1', '2', '3', '4', '5', '6', '7', 'exit']
+EXT_FAIL = ".failed"
 
 class MovieDriver:
     
@@ -93,6 +94,16 @@ class MovieDriver:
             movieWrite.writeCsv()
         else: 
             movieWrite.writeSql()
+            
+        if self.failed:   
+            fail_name = f_name + EXT_FAIL
+            fail_path = os.path.join(f_path, fail_name)
+            fd = open(fail_path, "w")
+            
+            for title in self.failed:
+                fd.write(title + "\n")
+            
+            fd.close()
     
     # Search movie details
     def searchMovies(self, append = None):
