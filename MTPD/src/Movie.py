@@ -10,10 +10,12 @@
 # 2013-12-23 JC Updated Movie class to set and get movie details and poster 
 #               path. Details are store in a dictionary using the names tmdbId,
 #               title, releaseDate, genre, and cast for the associated values.
-# 2013-23-24 JC Modified getString method to display movie details in a 
+# 2013-12-24 JC Modified getString method to display movie details in a 
 #               specific order.
+# 2013-12-25 JC Updated getString method to pad genre.
 
 DETAIL_KEYS = ['tmdbId', 'title', 'releaseDate', 'genre', 'cast']
+MAX = 5
 
 class Movie:
     
@@ -89,6 +91,7 @@ class Movie:
                 tmp = self.details[key]
                 for x in tmp:
                     movieString += x + delim
+                movieString += delim * (MAX - len(tmp))
             else:
                 movieString += self.details[key] + delim
         
