@@ -15,7 +15,7 @@ from MovieList import MovieList
 from MovieSearch import MovieSearch
 from Movie import Movie
 
-import os
+import os, codecs
 
 # Constants
 EXT_SQL = ".sql"
@@ -36,7 +36,7 @@ class MovieWrite:
     def writeSql(self):
         file_name = self.file_name + EXT_SQL
         f_path = os.path.join(self.file_path, file_name)
-        fd = open(f_path, "w")
+        fd = codecs.open(f_path, mode="w", encoding='utf-8')
         
         movieList = self.movieList.getMovieList()
         
@@ -66,7 +66,7 @@ class MovieWrite:
         f_path = os.path.join(self.file_path, file_name)
 
         data = self.movieList.getString()
-        fd = open(f_path, "w")
+        fd = codecs.open(f_path, mode="w", encoding='utf-8')
         fd.write(data)
         fd.close()
 
