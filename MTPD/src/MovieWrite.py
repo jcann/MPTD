@@ -10,6 +10,7 @@
 # 2013-12-23 JC Updated MovieWrite class to write movie details to CSV or SQL 
 #               files. SQL file is formatted to insert statements. CSV file is
 #               delimited for spreadsheet import. 
+# 2013-12-25 JC Updated to write UTF-8.
 
 from MovieList import MovieList
 from MovieSearch import MovieSearch

@@ -15,7 +15,7 @@
 # 2013-12-25 JC Updated getString method to pad genre.
 
 DETAIL_KEYS = ['tmdbId', 'title', 'releaseDate', 'genre', 'cast']
-MAX = 5
+MAX = 10
 
 class Movie:
     

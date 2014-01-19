@@ -10,6 +10,8 @@
 # 2013-12-23 JC Updated MovieDriver class to read, query, write movie titles.
 # 2013-12-25 JC Updated MovieDriver class to read input from keyboard. Added 
 #               menu selection.
+# 2013-12-25 JC Added write of failed titles to file.
+# 2014-01-19 JC Added search by ID and write result to display.
 
 from Movie import Movie
 from MovieList import MovieList
@@ -21,7 +23,21 @@ import os
 #Constants
 SUCCESS =  "Success"
 FAILURE = "Failure"
-OPTIONS = ['1', '2', '3', '4', '5', '6', '7', 'exit']
+
+MENU_OPTIONS = {
+                '0' : 'FILE INPUT',
+                '1' : 'KEYBOARD INPUT',
+                '2' : 'PRINT TITLES',
+                '3' : 'SEARCH ID',
+                '4' : 'SEARCH ID W/ CAST',
+                '5' : 'SEARCH TITLES',
+                '6' : 'SEARCH TITLES W/ CAST',
+                '7' : 'PRINT MOVIES',
+                '8' : 'WRITE CSV',
+                '9' : 'WRITE SQL',
+                'quit' : 'QUIT'
+                }
+
 EXT_FAIL = ".failed"
 
 class MovieDriver:
@@ -104,8 +120,26 @@ class MovieDriver:
                 fd.write(title + "\n")
             
             fd.close()
+
+    # Write movie details to display
+    def writeDisplay(self):
+        print "ID       TITLE                                                       RELEASE"
+        print "-------- ----------------------------------------------------------- ----------"
+
+        tempList = self.movieList.getMovieList()
+        for k in tempList:                        
+            print "%s %s %s" % (k.getId().rjust(8), (k.getTitle()[0:59].encode('ascii', 'replace')).ljust(59), k.getReleaseDate())
+        
+    # Search movie details by ID
+    def searchId(self, append = None):
+        movieNew = Movie()
+        
+        for movieId in self.titles:
+            print "Retrieving for %s..." % movieId
+            movieNew = self.movieSearch.getDetails(movieId, append)
+            self.movieList.setMovie(movieNew)
     
-    # Search movie details
+    # Search movie details by title
     def searchMovies(self, append = None):
         movieNew = Movie()
         
@@ -119,40 +153,42 @@ class MovieDriver:
                 self.movieList.setMovie(movieNew)
             else:
                 self.failed.append(name)
-    
+                    
 if __name__=='__main__':
     API_KEY = "447ecf40bf72a3fa6218f3024465a567"
     movieDriver = MovieDriver(API_KEY)
     
     while True:
+        
         print "MENU"
         print "---------------------------"    
-        print "   1: FILE INPUT"
-        print "   2: KEYBOARD INPUT"
-        print "   3: PRINT TITLES"
-        print "   4: SEARCH TITLES"
-        print "   5: SEARCH TITLES W/ CAST"
-        print "   6: WRITE CSV"
-        print "   7: WRITE SQL"
-        print "exit: EXIT"
-        
+        for item in sorted(MENU_OPTIONS.keys()):
+            print "%s: %s"%(str(item).rjust(4), MENU_OPTIONS[item])
+                
         menuInput = ""
-        while menuInput not in OPTIONS:
+                    
+        while menuInput not in MENU_OPTIONS:
             menuInput = raw_input("SELECT AN OPTION: ")
         
-        if menuInput == 'exit':
+        if menuInput == 'quit':
             break
-        elif menuInput == '1':
+        elif menuInput == '0':
             movieDriver.readFile()            
-        elif menuInput == '2':
+        elif menuInput == '1':
             movieDriver.readInput()
-        elif menuInput == '3':
+        elif menuInput == '2':
             movieDriver.printTitles()            
+        elif menuInput == '3':
+            movieDriver.searchId()
         elif menuInput == '4':
-            movieDriver.searchMovies()
+            movieDriver.searchId("credits")
         elif menuInput == '5':
-            movieDriver.searchMovies("credits")
+            movieDriver.searchMovies()
         elif menuInput == '6':
-            movieDriver.writeFile()            
+            movieDriver.searchMovies("credits")
         elif menuInput == '7':
+            movieDriver.writeDisplay()
+        elif menuInput == '8':
+            movieDriver.writeFile()            
+        elif menuInput == '9':
             movieDriver.writeFile("sql")
