@@ -13,8 +13,10 @@
 # 2013-12-24 JC Modified getString method to display movie details in a 
 #               specific order.
 # 2013-12-25 JC Updated getString method to pad genre.
+# 2014-01-25 JC Updated to delimit lists items by a comma
 
 DETAIL_KEYS = ['tmdbId', 'title', 'releaseDate', 'genre', 'cast']
+SEP = ", "
 MAX = 10
 
 class Movie:
@@ -90,8 +92,8 @@ class Movie:
             if isinstance(self.details[key], list):
                 tmp = self.details[key]
                 for x in tmp:
-                    movieString += x + delim
-                movieString += delim * (MAX - len(tmp))
+                    movieString += x + SEP
+                movieString = movieString.rstrip(SEP) + delim
             else:
                 movieString += self.details[key] + delim
         
