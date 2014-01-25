@@ -12,6 +12,7 @@
 #               menu selection.
 # 2013-12-25 JC Added write of failed titles to file.
 # 2014-01-19 JC Added search by ID and write result to display.
+# 2014-01-25 JC Updated to process TV titles.
 
 from Movie import Movie
 from MovieList import MovieList
@@ -38,14 +39,20 @@ MENU_OPTIONS = {
                 'quit' : 'QUIT'
                 }
 
+MEDIA_OPTIONS = {
+                 'movie' : 'MOVIE',
+                 'tv' : 'TV',
+                 'quit' : 'QUIT'
+                 }
+
 EXT_FAIL = ".failed"
 
 class MovieDriver:
     
     # Constructor
-    def __init__(self, api_key):
+    def __init__(self, api_key, mediaType = "movie"):
         self.movieList = MovieList()
-        self.movieSearch = MovieSearch(api_key)
+        self.movieSearch = MovieSearch(api_key, mediaType)
         self.titles = []
         self.failed = []
     
@@ -156,7 +163,16 @@ class MovieDriver:
                     
 if __name__=='__main__':
     API_KEY = "447ecf40bf72a3fa6218f3024465a567"
-    movieDriver = MovieDriver(API_KEY)
+            
+    menuInput = ""
+                
+    while menuInput not in MEDIA_OPTIONS:
+        menuInput = raw_input("SELECT MEDIA (quit to exit): ")
+
+    if menuInput == 'quit':
+        exit()
+         
+    movieDriver = MovieDriver(API_KEY, menuInput)
     
     while True:
         
